@@ -1,0 +1,9 @@
+LIBRARY KeyboardHook
+
+EXPORTS
+	GetInjectionsCount	@1
+	SetKeyboardHook		@2
+	UnhookKeyboardHook	@3
+
+SECTIONS
+	.DENISEG			READ SHARED WRITE
