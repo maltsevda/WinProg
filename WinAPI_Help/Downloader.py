@@ -1,37 +1,61 @@
 #!/usr/bin/env python
-"""Microsoft's Old API Help File Reborn"""
+
+"""
+Загрузчик справки с сайта
+Microsoft's Old API Help File Reborn
+http://laurencejackson.com/win32
+"""
 
 from urllib.request import urlopen
+
+#
+# read_chunk(url, max_chunk)
+#
+
+def read_chunk(url, max_chunk=8192*8):
+    """Генератор содержимого web-файла, для использования в инструкции for"""
+    with urlopen(url) as response:
+        while True:
+            chunk = response.read(max_chunk)
+            if chunk:
+                yield chunk
+            else:
+                return
 
 #
 # download(url, name)
 #
 
 def download(url, name):
+    """Скачивает web-файл на диск"""
 
-    """Download binary file from url to disk"""
+    # определяем размер скачиваемого файла
 
-    max_chunk = 1024 * 16
-
+    file_size = 0
     with urlopen(url) as response:
-        with open(name, 'wb') as file:
-            while True:
-                chunk = response.read(max_chunk)
-                if not chunk:
-                    break
-                file.write(chunk)
+        header = response.getheader('Content-Length')
+        file_size = int(header)
+    print('File size: %dKB' % (file_size / 1024))
+
+    # скачиваем файл на диск
+
+    with open(name, 'wb') as file:
+        downloaded_size = 0
+        for chunk in read_chunk(url):
+            downloaded_size += len(chunk)
+            file.write(chunk)
+            # выводим прогресс чтения файла
+            status = 'Downloading... %3.2f%% complete.' % (downloaded_size * 100. / file_size)
+            print(status, end='\r')
+        print()
 
 #
-# main() - entry point
+# main()
 #
 
 def main():
-
-    """Entry point"""
-
-    print('Downloading, please wait...')
+    """Точка входа в программу"""
     download('http://laurencejackson.com/win32/Win32.chm', 'Win32.chm')
-    print('Download complete.')
 
 #
 # start script
