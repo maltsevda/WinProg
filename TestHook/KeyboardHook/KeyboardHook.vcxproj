@@ -23,7 +23,7 @@
     <ProjectGuid>{4B062404-C7A0-4B56-92B9-4132255AB336}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>KeyboardHook</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
