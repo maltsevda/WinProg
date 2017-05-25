@@ -84,8 +84,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		hMutex = CreateMutex(NULL, FALSE, NULL);
 		hSemaphore = CreateSemaphore(0, 0, LONG_MAX, 0);
-		CreateThread(NULL, 0, GenThreadProc, NULL, 0, NULL);
-		CreateThread(NULL, 0, ReadThreadProc, NULL, 0, NULL);
+		phThreads[0] = CreateThread(NULL, 0, GenThreadProc, NULL, 0, NULL);
+		phThreads[1] = CreateThread(NULL, 0, ReadThreadProc, NULL, 0, NULL);
 		break;
 
 	case WM_DESTROY:
