@@ -8,7 +8,11 @@
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
+                "databaseFilename": "",
+                "path": [
+                    "/usr/include",
+                    "/usr/local/include"
+                ]
             }
         },
         {
@@ -19,17 +23,26 @@
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
+                "databaseFilename": "",
+                "path": [
+                    "/usr/include",
+                    "/usr/local/include"
+                ]
             }
         },
         {
             "name": "Win32",
             "includePath": [
-                "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1A\\Include"
+                "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1A\\Include",
+                "C:\\Program Files (x86)\\Windows Kits\\8.1\\Include"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
+                "databaseFilename": "",
+                "path": [
+                    "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1A\\Include",
+                    "C:\\Program Files (x86)\\Windows Kits\\8.1\\Include"
+                ]
             }
         }
     ]
