@@ -6,7 +6,7 @@
 
 HINSTANCE hInstance = NULL;
 HMODULE hLazyDLL = NULL;
-LPCTSTR (*GetSecondaryString)();
+LPCTSTR (APIENTRY * GetSecondaryString)(INT) = 0;
 
 //
 // WindowProc - procedure for main window

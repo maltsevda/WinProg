@@ -9,6 +9,6 @@
 #define LAZYDLL_API __declspec(dllimport)
 #endif
 
-extern "C" LAZYDLL_API LPCTSTR APIENTRY GetSecondaryString();
+extern "C" LAZYDLL_API LPCTSTR APIENTRY GetSecondaryString(INT iNumber);
 
 
