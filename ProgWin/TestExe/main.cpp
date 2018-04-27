@@ -19,7 +19,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 	{
 		LPCTSTR szText = GetMainString(3.1415f);
-		LPCTSTR szSecondaryText = GetSecondaryString ? GetSecondaryString() : TEXT("Library is not loaded.");
+		LPCTSTR szSecondaryText = GetSecondaryString ? GetSecondaryString(42) : TEXT("Library is not loaded.");
 
 		RECT rc = { 0 };
 		GetClientRect(hWnd, &rc);

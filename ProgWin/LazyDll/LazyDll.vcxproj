@@ -23,7 +23,7 @@
     <ProjectGuid>{63156767-D041-4634-A14A-ED2A0F3C01B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LazyDll</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

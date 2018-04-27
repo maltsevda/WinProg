@@ -13,7 +13,12 @@
                     "/usr/include",
                     "/usr/local/include"
                 ]
-            }
+            },
+            "intelliSenseMode": "clang-x64",
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ]
         },
         {
             "name": "Linux",
@@ -28,7 +33,8 @@
                     "/usr/include",
                     "/usr/local/include"
                 ]
-            }
+            },
+            "intelliSenseMode": "clang-x64"
         },
         {
             "name": "Win32",
@@ -43,7 +49,9 @@
                     "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1A\\Include",
                     "C:\\Program Files (x86)\\Windows Kits\\8.1\\Include"
                 ]
-            }
+            },
+            "intelliSenseMode": "msvc-x64"
         }
-    ]
+    ],
+    "version": 3
 }
