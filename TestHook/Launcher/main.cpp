@@ -47,7 +47,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		if (bHooked && wHookParam)
 		{
 			rc.top += 48;
+#ifdef _WIN64
 			_stprintf_s(szText, TEXT("Last virtual-key code: 0x%02llX."), wHookParam);
+#else
+			_stprintf_s(szText, TEXT("Last virtual-key code: 0x%02X."), wHookParam);
+#endif
 			DrawText(hdc, szText, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 		}
 
