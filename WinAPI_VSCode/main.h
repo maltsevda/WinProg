@@ -2,6 +2,8 @@
 #include "resource.h"
 
 extern HINSTANCE hInstance;
+extern TCHAR szText[256];
+extern int iBrushColor;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam);
-int CALLBACK WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow);
+INT_PTR CALLBACK OptionsProc(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam);

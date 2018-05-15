@@ -11,7 +11,7 @@ RM = del
 
 # static libraries for linker
 
-SRCS = main.cpp proc.cpp main.rc
+SRCS = main.cpp windowproc.cpp optionsproc.cpp main.rc
 LIBS = User32.lib Gdi32.lib
 
 OBJS = $(SRCS:.cpp=.obj)

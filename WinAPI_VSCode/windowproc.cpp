@@ -1,5 +1,8 @@
 #include "main.h"
 
+TCHAR szText[256] = TEXT("Привет мир!");
+int iBrushColor = WHITE_BRUSH;
+
 LPCTSTR szAboutText = 
 	TEXT("\tЛабораторная работа №1\n")
 	TEXT("\tВариант №1\n\n")
@@ -29,12 +32,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 				HBITMAP hMemBMP = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
 				HGDIOBJ hOldBMP = SelectObject(hMemDC, hMemBMP);
 				
-				HBRUSH hFillBrush = (HBRUSH)GetStockObject(LTGRAY_BRUSH);
+				HBRUSH hFillBrush = (HBRUSH)GetStockObject(iBrushColor);
 				FillRect(hMemDC, &rc, hFillBrush);
 				DeleteObject(hFillBrush);
 
 				int iOldBkMode = SetBkMode(hMemDC, TRANSPARENT);
-				DrawText(hMemDC, TEXT("Привет мир!"), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+				DrawText(hMemDC, szText, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 				SetBkMode(hMemDC, iOldBkMode);
 
 				BitBlt(hdc, 0, 0, rc.right, rc.bottom, hMemDC, 0, 0, SRCCOPY);
@@ -52,6 +55,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		case WM_COMMAND:
 			switch ( LOWORD(wParam) )
 			{
+				case IDM_OPTIONS:
+					DialogBox(hInstance, MAKEINTRESOURCE(IDD_OPTIONS), hWnd, OptionsProc);
+					InvalidateRect(hWnd, 0, FALSE);
+					break;
 				case IDM_EXIT: 
 					DestroyWindow(hWnd); 
 					break;
