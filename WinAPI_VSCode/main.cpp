@@ -2,7 +2,7 @@
 
 HINSTANCE hInstance = NULL;
 
-int CALLBACK WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
+int CALLBACK _tWinMain(HINSTANCE hInst, HINSTANCE, LPTSTR szCmdLine, int nCmdShow)
 {
 	hInstance = hInst;
 	
@@ -21,7 +21,7 @@ int CALLBACK WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	
 	HWND hWnd = CreateWindowEx(0, 
 					TEXT("SomeClassName"), 
-					TEXT("Hello world!"),
+					*szCmdLine ? szCmdLine : TEXT("Hello world!"),
 					WS_OVERLAPPEDWINDOW,
 					CW_USEDEFAULT, 0,
 					CW_USEDEFAULT, 0,
