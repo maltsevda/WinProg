@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "defines": [
+                "WIN32", "UNICODE", "_UNICODE"
+            ],
+            "includePath": [
+                "C:\\Program Files\\Windows Kits\\8.1\\Include",
+                "C:\\Program Files (x86)\\Windows Kits\\8.1\\Include"
+            ],
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}
