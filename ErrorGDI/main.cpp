@@ -11,7 +11,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 			{
 				static ULONG nFrameNumber = 0;
 				TCHAR szText[256] = { 0 };
-				_stprintf_s(szText, TEXT("Frame: %lu"), nFrameNumber++);
+				_stprintf_s(szText, TEXT("Frame: %lu"), ++nFrameNumber);
 
 				RECT rc = { 0 };
 				GetClientRect(hWnd, &rc);
