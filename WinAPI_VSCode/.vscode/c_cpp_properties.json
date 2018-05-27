@@ -1,55 +1,14 @@
 {
     "configurations": [
         {
-            "name": "Mac",
-            "includePath": [
-                "/usr/include",
-                "/usr/local/include"
-            ],
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
-                "path": [
-                    "/usr/include",
-                    "/usr/local/include"
-                ]
-            },
-            "intelliSenseMode": "clang-x64",
-            "macFrameworkPath": [
-                "/System/Library/Frameworks",
-                "/Library/Frameworks"
-            ]
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "/usr/include",
-                "/usr/local/include"
-            ],
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
-                "path": [
-                    "/usr/include",
-                    "/usr/local/include"
-                ]
-            },
-            "intelliSenseMode": "clang-x64"
-        },
-        {
             "name": "Win32",
+            "defines": [
+                "WIN32", "UNICODE", "_UNICODE"
+            ],
             "includePath": [
-                "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1A\\Include",
+                "C:\\Program Files\\Windows Kits\\8.1\\Include",
                 "C:\\Program Files (x86)\\Windows Kits\\8.1\\Include"
             ],
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
-                "path": [
-                    "C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1A\\Include",
-                    "C:\\Program Files (x86)\\Windows Kits\\8.1\\Include"
-                ]
-            },
             "intelliSenseMode": "msvc-x64"
         }
     ],
