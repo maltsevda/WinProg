@@ -1,0 +1,54 @@
+{
+  "environments": [
+    {
+      "BuildDir": "${projectDir}\\build",
+      "InstallDir": "${projectDir}\\install"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Debug_x64",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "Release_x64",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "Debug_x86",
+      "generator": "Visual Studio 15 2017",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v:q",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "Release_x86",
+      "generator": "Visual Studio 15 2017",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${env.BuildDir}\\${name}",
+      "installRoot": "${env.InstallDir}\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v:q",
+      "ctestCommandArgs": ""
+    }
+  ]
+}
