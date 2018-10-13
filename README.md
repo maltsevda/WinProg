@@ -12,7 +12,7 @@
    * Остальное по желанию, в любой момент установленные компоненты можно изменить.
 
    Вам понадобится зарегистрировать студию, это бесплатно и требует только аккаунта в Microsoft. Если вы пропустили этот этап, то в правом верхнем углу есть специальная кнопочка для этого:
-   ![VS Login](https://github.com/maltsevda/WinProg/Images/VSLogin.png "VS Login Button")
+   ![VS Login](https://github.com/maltsevda/WinProg/blob/master/Images/VSLogin.png "VS Login Button")
 
 2. Установить последнюю версию CMake: [ссылка на скачивание](https://cmake.org/download/). Я рекомендую использовать версии из раздела "Latest Release", а не "Release Candidate".
 
@@ -32,7 +32,7 @@
 
 1. Самый простой способ, скачать zip-архив с примерами напрямую с сайта:
 
-   ![Download](https://github.com/maltsevda/WinProg/Images/DownloadFromGitHub.png "Download from GitHub")
+   ![Download](https://github.com/maltsevda/WinProg/blob/master/Images/DownloadFromGitHub.png "Download from GitHub")
 
    Затем распаковать в нужную папку и можно приступать к работе.
 
@@ -64,7 +64,7 @@
 
 ### Вариант 1. Генерируем проекты через CMake.
 
-![CMake](https://github.com/maltsevda/WinProg/Images/CMakeGUI.png "CMake GUI")
+![CMake](https://github.com/maltsevda/WinProg/blob/master/Images/CMakeGUI.png "CMake GUI")
 
 1. Выбираем папку с примером, в ней обязательно должен быть файл `CMakeLists.txt`
 2. Выбираем папку, куда будут созданы файлы проекта. В моем случае, подпапка `Build`
@@ -80,7 +80,7 @@
 4. Ждем, пока студия готовит проект. По окончанию работы в Output будет выведено: `1> Target info extraction done.`
 5. В меню, выбираем текущий запускаемый проект:
 
-![CMakeInVS](https://github.com/maltsevda/WinProg/Images/CMakeInVS.png "CMake in Visual Studio")
+![CMakeInVS](https://github.com/maltsevda/WinProg/blob/master/Images/CMakeInVS.png "CMake in Visual Studio")
 
 6. Все, можно собирать и запускать проект как обычно.
 
@@ -93,7 +93,7 @@
 3. Редактор спросит про систему для сборки проекта `Select Kit`. Выбираем Visual Studio Comunity, ну а x86 или amd64 по вкусу.
 4. Управление проектом будет внизу, в статусной строке:
 
-![CMakeInVSCode](https://github.com/maltsevda/WinProg/Images/CMakeInVSCode.png "CMake in Visual Studio Code")
+![CMakeInVSCode](https://github.com/maltsevda/WinProg/blob/master/Images/CMakeInVSCode.png "CMake in Visual Studio Code")
 
 5. Зачастую достаточно сменить только кодировку у файла (Reopen with Encoding) и запустить сборку. Если редактор о чем-нибудь попросит, то разрешайте. Плохого он не посоветует.
 6. После сборки жмякаем по жучку и запускаем пример. В первый раз он может спросить, что именно запускаем. Но в большинстве примеров выбор единственный. Все.
