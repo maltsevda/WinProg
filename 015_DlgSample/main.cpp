@@ -83,7 +83,7 @@ INT_PTR CALLBACK OptionsProc(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam
 			if (BST_CHECKED == IsDlgButtonChecked(hDlg, IDC_BLACK)) iColorButton = IDC_BLACK;
 			InvalidateRect(GetParent(hDlg), 0, TRUE);
 			UpdateTextDialog();
-			break;
+			return TRUE;
 		}
 		break;
 	}
