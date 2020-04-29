@@ -10,8 +10,16 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 //
 
 HWND hMainDlg = NULL;
-const int nArraySize = 65535;
+const int nArraySize = 65536;
 int nSortState[3] = { 0 };
+
+// массив и его "охрана"
+HANDLE hMutex = NULL;
+int* pArray = new int[nArraySize];
+
+// блокируем выход, если работают дочерние потоки
+HANDLE hSortThread[3] = { NULL };
+BOOL bEmergencyExit = FALSE;
 
 //
 // Helper's functions
@@ -20,7 +28,23 @@ int nSortState[3] = { 0 };
 void FillArray(int* arr, int size)
 {
 	for (int i = 0; i < size; ++i)
-		arr[i] = rand() % 1000;
+		arr[i] = i;
+	for (int k = 0; k < 1024; ++k)
+	{
+		int i = rand() % size;
+		int j = rand() % size;
+		int t = arr[i];
+		arr[i] = arr[j];
+		arr[j] = t;
+	}
+}
+
+BOOL IsArraySorted(int* arr, int size)
+{
+	for (int i = 0; i < size; ++i)
+		if (arr[i] != i)
+			return FALSE;
+	return TRUE;
 }
 
 void SelectSort(int* arr, int size)
@@ -32,6 +56,10 @@ void SelectSort(int* arr, int size)
 		tmp = arr[i];
 		for (int j = i + 1; j < size; ++j) // цикл выбора наименьшего элемента
 		{
+			// в случае аварийного выхода - прерываем поток с ошибкой
+			if (bEmergencyExit)
+				ExitThread(1);
+
 			if (arr[j] < tmp)
 			{
 				pos = j;
@@ -51,6 +79,10 @@ void BubbleSort(int* arr, int size)
 	{
 		for (int j = 0; j < size - 1; ++j) // внутренний цикл прохода
 		{
+			// в случае аварийного выхода - прерываем поток с ошибкой
+			if (bEmergencyExit)
+				ExitThread(1);
+
 			if (arr[j + 1] < arr[j])
 			{
 				tmp = arr[j + 1];
@@ -93,6 +125,8 @@ LPCTSTR StateToString(int nState)
 	{
 	case 0: return TEXT("READY");
 	case 1: return TEXT("RUNNING!");
+	case 2: return TEXT("SUCCESS");
+	case 3: return TEXT("FAILED");
 	}
 	return TEXT("");
 }
@@ -100,11 +134,11 @@ LPCTSTR StateToString(int nState)
 void UpdateDialog(int index, int state)
 {
 	nSortState[index] = state;
-	PostMessage(hMainDlg, WM_APP + 1, 0, 0);
+	PostMessage(hMainDlg, WM_APP, 0, 0);
 }
 
 //
-// Threrad Proc
+// Thread Proc
 //
 
 DWORD WINAPI ThreadProc(LPVOID lpParameter)
@@ -113,19 +147,25 @@ DWORD WINAPI ThreadProc(LPVOID lpParameter)
 
 	UpdateDialog(index, 1);
 
-	int* array = new int[nArraySize];
-	FillArray(array, nArraySize);
+	if (WaitForSingleObject(hMutex, INFINITE) != WAIT_OBJECT_0)
+		return 1;
 
+	FillArray(pArray, nArraySize);
 	switch (index)
 	{
-	case 0: SelectSort(array, nArraySize); break;
-	case 1: BubbleSort(array, nArraySize); break;
-	case 2: QuickSort(array, nArraySize - 1); break;
+	case 0: SelectSort(pArray, nArraySize); break;
+	case 1: BubbleSort(pArray, nArraySize); break;
+	case 2: QuickSort(pArray, nArraySize - 1); break;
 	}
+	BOOL bSorted = IsArraySorted(pArray, nArraySize);
 
-	delete[] array;
+	ReleaseMutex(hMutex);
 
-	UpdateDialog(index, 0);
+	if (bSorted)
+		UpdateDialog(index, 2);
+	else
+		UpdateDialog(index, 3);
+
 	return 0;
 }
 
@@ -139,7 +179,8 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam
 	{
 	case WM_INITDIALOG:
 		hMainDlg = hDlg;
-		PostMessage(hMainDlg, WM_APP + 1, 0, 0);
+		hMutex = CreateMutex(NULL, FALSE, NULL);
+		PostMessage(hMainDlg, WM_APP, 0, 0);
 		return TRUE;
 
 	case WM_COMMAND:
@@ -148,21 +189,24 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam
 		switch (LOWORD(wParam))
 		{
 		case IDC_RUN:
-			CreateThread(NULL, 0, ThreadProc, (LPVOID)0, 0, NULL);
-			CreateThread(NULL, 0, ThreadProc, (LPVOID)1, 0, NULL);
-			CreateThread(NULL, 0, ThreadProc, (LPVOID)2, 0, NULL);
+			hSortThread[0] = CreateThread(NULL, 0, ThreadProc, (LPVOID)0, 0, NULL);
+			hSortThread[1] = CreateThread(NULL, 0, ThreadProc, (LPVOID)1, 0, NULL);
+			hSortThread[2] = CreateThread(NULL, 0, ThreadProc, (LPVOID)2, 0, NULL);
 			return TRUE;
 		case IDCANCEL:
+			bEmergencyExit = TRUE; // устанавливаем "аварийный" выход
+			// и ждем завершения всех дочерних потоков (NULL - тоже хороший вариант)
+			WaitForMultipleObjects(3, hSortThread, TRUE, INFINITE);
 			EndDialog(hDlg, 0);
 			return TRUE;
 		}
 		break;
 
-	case WM_APP + 1:
+	case WM_APP:
 		SetDlgItemText(hDlg, IDC_SELECTSORT, StateToString(nSortState[0]));
 		SetDlgItemText(hDlg, IDC_BUBBLESORT, StateToString(nSortState[1]));
 		SetDlgItemText(hDlg, IDC_QUICKSORT, StateToString(nSortState[2]));
-		EnableWindow(GetDlgItem(hDlg, IDC_RUN), !(nSortState[0] || nSortState[1] || nSortState[2]));
+		EnableWindow(GetDlgItem(hDlg, IDC_RUN), !(nSortState[0] == 1 || nSortState[1] == 1 || nSortState[2] == 1));
 		return TRUE;
 	}
 
