@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 project(ThreadSample)
-set(SOURCES main.cpp main.rc)
+set(SOURCES main.c main.rc)
 set(HEADERS resource.h)
 
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${HEADERS})

@@ -9,9 +9,9 @@ HWND hMainWnd = NULL;
 int* pArray = NULL;
 const int nArraySize = 65536;
 LONG nRunningThreads = 0;
-const UINT WM_THREADFINISHED = WM_USER + 1;
+#define WM_THREADFINISHED (WM_USER + 1)
 
-LPCTSTR szThreadStates[]
+LPCTSTR szThreadStates[] =
 {
 	TEXT("not Started"),
 	TEXT("not Started"),
@@ -142,11 +142,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 	switch (uiMsg)
 	{
 	case WM_CREATE:
-		pArray = new int[nArraySize];
+		pArray = malloc(sizeof(int) * nArraySize);
 		break;
 
 	case WM_DESTROY:
-		delete[] pArray;
+		free(pArray);
 		PostQuitMessage(0);
 		break;
 
@@ -162,7 +162,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps = { 0 };
 		HDC hdc = BeginPaint(hWnd, &ps);
 
-		_stprintf_s(szText,
+		_stprintf_s(szText, 256,
 			TEXT("Selection Sort: %s\nBubble Sort: %s\nQuick Sort: %s"),
 			szThreadStates[0],
 			szThreadStates[1],
@@ -207,7 +207,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 // WinMain - entry point
 //
 
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 {
 	srand((unsigned int)time(0));
 

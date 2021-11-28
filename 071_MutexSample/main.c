@@ -15,7 +15,7 @@ int nSortState[3] = { 0 };
 
 // массив и его "охрана"
 HANDLE hMutex = NULL;
-int* pArray = new int[nArraySize];
+int* pArray = NULL;
 
 // блокируем выход, если работают дочерние потоки
 HANDLE hSortThread[3] = { NULL };
@@ -179,9 +179,14 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam
 	{
 	case WM_INITDIALOG:
 		hMainDlg = hDlg;
+		pArray = malloc(sizeof(int) * nArraySize);
 		hMutex = CreateMutex(NULL, FALSE, NULL);
 		PostMessage(hMainDlg, WM_APP, 0, 0);
 		return TRUE;
+
+	case WM_CLOSE:
+		free(pArray);
+		break;
 
 	case WM_COMMAND:
 		if (HIWORD(wParam))
@@ -213,7 +218,7 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam
 	return FALSE;
 }
 
-int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nShowCmd)
 {
 	return (int)DialogBox(hInst, MAKEINTRESOURCE(IDD_MAIN), NULL, MainDlgProc);
 }

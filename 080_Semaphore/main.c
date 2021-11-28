@@ -61,13 +61,13 @@ DWORD WINAPI ReadThreadProc(LPVOID lpParameter)
 		int iNumber = 0;
 		if (GetQueueItem(&iNumber, 500))
 		{
-			_stprintf_s(szText, TEXT("Number: %i, Count: %i"), iNumber, nQueueSize);
+			_stprintf_s(szText, _countof(szText), TEXT("Number: %i, Count: %i"), iNumber, nQueueSize);
 			InvalidateRect(hMainWnd, 0, TRUE);
 			Sleep(500);
 		}
 		else
 		{
-			_stprintf_s(szText, TEXT("Number is not Exists"));
+			_stprintf_s(szText, _countof(szText), TEXT("Number is not Exists"));
 			InvalidateRect(hMainWnd, 0, TRUE);
 		}
 	}
@@ -117,7 +117,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 // WinMain - entry point
 //
 
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 {
 	srand((unsigned int)time(0));
 

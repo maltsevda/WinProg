@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <tchar.h>
+#include <stdbool.h>	// bool from C++
 #include "resource.h"
 
 // project properties
@@ -106,7 +107,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 
 		static int nFrame = 0;
 		TCHAR szFrame[64] = { 0 };
-		int nFrameLen = _stprintf_s(szFrame, TEXT("%i"), nFrame);
+		int nFrameLen = _stprintf_s(szFrame, 64, TEXT("%i"), nFrame);
 		TextOut(hdc, 5, 5, szFrame, nFrameLen);
 		nFrame++;
 
@@ -141,7 +142,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 			if (GetOpenFileName(&ofn))
 			{
-				_tcscpy_s(szUserText, szFileName);
+				_tcscpy_s(szUserText, _countof(szUserText), szFileName);
 				InvalidateRect(hWnd, 0, TRUE);
 				UpdateTextDialog();
 			}
@@ -177,12 +178,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 
 // entry point
 
-int CALLBACK _tWinMain(HINSTANCE hInst, HINSTANCE, LPTSTR szCmdLine, int nCmdShow)
+int CALLBACK _tWinMain(HINSTANCE hInst, HINSTANCE hPrev, LPTSTR szCmdLine, int nCmdShow)
 {
 	hInstance = hInst;
 
 	if (_tcslen(szCmdLine) > 0)
-		_tcscpy_s(szUserText, szCmdLine);
+		_tcscpy_s(szUserText, _countof(szUserText), szCmdLine);
 
 	WNDCLASSEX wcx = { 0 };
 	wcx.cbSize = sizeof(WNDCLASSEX);

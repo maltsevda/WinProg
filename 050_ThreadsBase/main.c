@@ -5,20 +5,12 @@
 #include "resource.h"
 
 HWND hMainWnd = NULL;
-HANDLE hMutexSort = NULL;
-HANDLE hMutexCheck = NULL;
 
-int* pArray = NULL;
-const int nArraySize = 65536;
-LONG nRunningThreads = 0;
-const UINT WM_THREADFINISHED = WM_USER + 1;
+const int nArraySize = 65535;
 
-LPCTSTR szThreadStates[]
-{
-	TEXT("not Started"),
-	TEXT("not Started"),
-	TEXT("not Started")
-};
+int nSelectionSort = 0;
+int nBubbleSort = 0;
+int nQuickSort = 0;
 
 //
 // Helper's functions
@@ -27,23 +19,7 @@ LPCTSTR szThreadStates[]
 void FillArray(int* arr, int size)
 {
 	for (int i = 0; i < size; ++i)
-		arr[i] = i;
-	for (int k = 0; k < 1024; ++k)
-	{
-		int i = rand() % size;
-		int j = rand() % size;
-		int t = arr[i];
-		arr[i] = arr[j];
-		arr[j] = t;
-	}
-}
-
-BOOL CheckArray(int* arr, int size)
-{
-	for (int i = 0; i < size; ++i)
-		if (arr[i] != i)
-			return FALSE;
-	return TRUE;
+		arr[i] = rand() % 1000;
 }
 
 void SelectSort(int* arr, int size)
@@ -110,6 +86,17 @@ void QuickSort(int* a, int N) {
 	if (N > i) QuickSort(a + i, N - i);
 }
 
+LPCTSTR StateToString(int nState)
+{
+	switch (nState)
+	{
+	case 0: return TEXT("STOPPED");
+	case 1: return TEXT("RUNNING");
+	case 2: return TEXT("FINISHED");
+	}
+	return TEXT("");
+}
+
 //
 // Thread procedures
 //
@@ -118,26 +105,26 @@ DWORD WINAPI ThreadProc(LPVOID lpParameter)
 {
 	SIZE_T index = (SIZE_T)lpParameter;
 
-	WaitForSingleObject(hMutexSort, INFINITE);
-	szThreadStates[index] = TEXT("Running");
-	InvalidateRect(hMainWnd, NULL, TRUE);
-
-	FillArray(pArray, nArraySize);
+	int* array = malloc(sizeof(int) * nArraySize);
+	FillArray(array, nArraySize);
 	switch (index)
 	{
 	case 0:
-		SelectSort(pArray, nArraySize);
+		SelectSort(array, nArraySize);
+		nSelectionSort = 2;
 		break;
 	case 1:
-		BubbleSort(pArray, nArraySize);
+		BubbleSort(array, nArraySize);
+		nBubbleSort = 2;
 		break;
 	case 2:
-		QuickSort(pArray, nArraySize - 1);
+		QuickSort(array, nArraySize - 1);
+		nQuickSort = 2;
 		break;
 	}
+	free(array);
 
-	ReleaseMutex(hMutexCheck);
-	PostMessage(hMainWnd, WM_THREADFINISHED, (WPARAM)index, 0);
+	InvalidateRect(hMainWnd, 0, TRUE);
 	return 0;
 }
 
@@ -149,19 +136,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uiMsg)
 	{
-	case WM_CREATE:
-		hMutexSort = CreateMutex(NULL, FALSE, NULL);
-		hMutexCheck = CreateMutex(NULL, TRUE, NULL);
-		pArray = new int[nArraySize];
-		break;
-
-	case WM_DESTROY:
-		delete[] pArray;
-		CloseHandle(hMutexSort);
-		CloseHandle(hMutexCheck);
-		PostQuitMessage(0);
-		break;
-
 	case WM_PAINT:
 	{
 		static TCHAR szText[256] = { 0 };
@@ -174,11 +148,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps = { 0 };
 		HDC hdc = BeginPaint(hWnd, &ps);
 
-		_stprintf_s(szText,
+		_stprintf_s(szText, 256,
 			TEXT("Selection Sort: %s\nBubble Sort: %s\nQuick Sort: %s"),
-			szThreadStates[0],
-			szThreadStates[1],
-			szThreadStates[2]);
+			StateToString(nSelectionSort),
+			StateToString(nBubbleSort),
+			StateToString(nQuickSort));
 		DrawText(hdc, szText, -1, &rc, DT_LEFT | DT_TOP);
 
 		EndPaint(hWnd, &ps);
@@ -189,9 +163,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		switch (LOWORD(wParam))
 		{
 		case IDM_RUNTHREADS:
-			if (nRunningThreads)
+			if (nSelectionSort == 1 || nBubbleSort == 1 || nQuickSort == 1)
 				break;
-			nRunningThreads = 3;
+			nSelectionSort = nBubbleSort = nQuickSort = 1;
+			InvalidateRect(hWnd, 0, TRUE);
 			CreateThread(NULL, 0, ThreadProc, (LPVOID)0, 0, NULL);
 			CreateThread(NULL, 0, ThreadProc, (LPVOID)1, 0, NULL);
 			CreateThread(NULL, 0, ThreadProc, (LPVOID)2, 0, NULL);
@@ -202,14 +177,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case WM_THREADFINISHED:
-
-		WaitForSingleObject(hMutexCheck, INFINITE);
-		szThreadStates[wParam] = CheckArray(pArray, nArraySize) ? TEXT("Finished Successful") : TEXT("Finished with Fail");
-		ReleaseMutex(hMutexSort);
-
-		nRunningThreads--;
-		InvalidateRect(hWnd, 0, TRUE);
+	case WM_DESTROY:
+		PostQuitMessage(0);
 		break;
 	}
 
@@ -220,9 +189,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 // WinMain - entry point
 //
 
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 {
-	srand((unsigned int)time(0));
+	srand((unsigned)time(NULL));
 
 	WNDCLASSEX wcx = { 0 };
 	wcx.cbSize = sizeof(WNDCLASSEX);
@@ -239,7 +208,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 
 	hMainWnd = CreateWindowEx(0,
 		TEXT("SomeClassName"),
-		TEXT("WinProg: Threads with Mutex."),
+		TEXT("WinProg: Threads Base."),
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0,
 		CW_USEDEFAULT, 0,

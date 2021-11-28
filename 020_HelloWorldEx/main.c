@@ -2,7 +2,7 @@
 
 HINSTANCE hInstance = NULL;
 
-int CALLBACK WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
+int CALLBACK WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 {
 	hInstance = hInst;
 

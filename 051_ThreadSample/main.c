@@ -113,7 +113,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParameter)
 
 	UpdateDialog(index, 1);
 
-	int* array = new int[nArraySize];
+	int* array = malloc(sizeof(int) * nArraySize);
 	FillArray(array, nArraySize);
 
 	switch (index)
@@ -123,7 +123,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParameter)
 	case 2: QuickSort(array, nArraySize - 1); break;
 	}
 
-	delete[] array;
+	free(array);
 
 	UpdateDialog(index, 0);
 	return 0;
@@ -169,7 +169,7 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam
 	return FALSE;
 }
 
-int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nShowCmd)
 {
 	return (int)DialogBox(hInst, MAKEINTRESOURCE(IDD_MAIN), NULL, MainDlgProc);
 }

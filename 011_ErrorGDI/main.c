@@ -10,9 +10,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_PAINT:
 			{
-				static ULONG nFrameNumber = 0;
+				static unsigned int nFrameNumber = 0;
 				TCHAR szText[256] = { 0 };
-				_stprintf_s(szText, TEXT("Frame: %lu"), ++nFrameNumber);
+				_stprintf_s(szText, 256, TEXT("Frame: %u"), ++nFrameNumber);
 
 				RECT rc = { 0 };
 				GetClientRect(hWnd, &rc);
@@ -58,7 +58,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-int CALLBACK _tWinMain(HINSTANCE hInst, HINSTANCE, LPTSTR szCmdLine, int nCmdShow)
+int CALLBACK _tWinMain(HINSTANCE hInst, HINSTANCE hPrev, LPTSTR szCmdLine, int nCmdShow)
 {
 	WNDCLASSEX wcx = { 0 };
 	wcx.cbSize = sizeof(WNDCLASSEX);
